@@ -11,20 +11,18 @@ import './styles.css';
 
 export default function ClientRegister(){
 
-    const [id, setId] = useState(null);
     const [name, setName] = useState('');
     const [organizacao_id, setOrgId] = useState('');
     const [departamento_id, setDepId] = useState('');
     const [email, setEmail] = useState('');
     const [registerDate, setRegisterDate] = useState('');
     const [password, setPassword] = useState('');
-    const [profileId, setProfileId] = useState(null);
+    const [profileId, setProfileId] = useState('');
 
-    async function saveOrUpdate(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const data = {
-            id,
             departamento_id,
             organizacao_id,
             profileId,                        
@@ -35,15 +33,25 @@ export default function ClientRegister(){
         }
 
         try {
-            console.log(typeof(data))
-            console.log(Object.keys(data))
-            await api.post('/api/usuarios/CriarUsuario', Object.keys(data));
+            //console.log(typeof(data))
+            await api.post('/api/usuarios/CriarUsuario', 
+            {
+                departamento_id: data.departamento_id,
+                organizacao_id: data.organizacao_id,
+                profileId: data.profileId,                        
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                registerDate: data.registerDate
+            });
+            //await api.post('/api/usuarios/CriarUsuario', data);
             alert('Cliente registrado.')
         }            
         catch (err) {
+            console.log(err)
             alert('Erro ao registrar cliente.')
         }
-    }
+    };
 
     return (
         <div className="new-cliente-container">
@@ -52,12 +60,7 @@ export default function ClientRegister(){
                     <h1> Cadastro de Usuário </h1>                    
                 </section>
 
-                <form onSubmit={saveOrUpdate}>
-                    <input 
-                        placeholder="ID usuário"
-                        value={id}
-                        onChange={e => setId(e.target.value)}
-                    />
+                <form onSubmit={handleSubmit}>
                     <input 
                         placeholder="ID Departamento"
                         value={departamento_id}
